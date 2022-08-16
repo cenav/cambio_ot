@@ -1,0 +1,25 @@
+create table pevisa.estado_cambio_ot (
+  id_estado  number(3),
+  dsc_estado varchar2(50) not null
+)
+  tablespace pevisad;
+
+
+create unique index pevisa.idx_estado_cambio_ot
+  on pevisa.estado_cambio_ot(id_estado)
+  tablespace pevisax;
+
+
+create or replace public synonym estado_cambio_ot for pevisa.estado_cambio_ot;
+
+
+alter table pevisa.estado_cambio_ot
+  add (
+    constraint pk_estado_cambio_ot
+      primary key (id_estado)
+        using index pevisa.idx_estado_cambio_ot
+        enable validate
+    );
+
+
+grant delete, insert, select, update on pevisa.estado_cambio_ot to sig_roles_invitado;

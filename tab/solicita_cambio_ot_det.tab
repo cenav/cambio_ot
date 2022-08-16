@@ -1,0 +1,33 @@
+create table pevisa.solicita_cambio_ot_det (
+  id_solictud        number(8),
+  cod_art            varchar2(30),
+  cambia_material    varchar2(30),
+  cambia_rendimiento number(16, 4),
+  anula              number(1) default 0 not null
+)
+  tablespace pevisad;
+
+
+create unique index pevisa.idx_solicita_cambio_ot_det
+  on pevisa.solicita_cambio_ot_det(id_solictud, cod_art)
+  tablespace pevisax;
+
+
+create or replace public synonym solicita_cambio_ot_det for pevisa.solicita_cambio_ot_det;
+
+
+alter table pevisa.solicita_cambio_ot_det
+  add (
+    constraint pk_solicita_cambio_ot_det
+      primary key (id_solictud, cod_art)
+        using index pevisa.idx_solicita_cambio_ot_det
+        enable validate,
+    constraint chk_solicita_cambio_ot_det
+      check ( anula in (0, 1) ),
+    constraint fk_solicita_cambio_ot_det
+      foreign key (id_solictud)
+        references solicita_cambio_ot(id_solicitud)
+    );
+
+
+grant delete, insert, select, update on pevisa.solicita_cambio_ot_det to sig_roles_invitado;
