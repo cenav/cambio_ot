@@ -33,7 +33,7 @@ select o.nuot_tipoot_codigo, o.numero, o.formu_art_cod_art, to_char(o.fecha, 'dd
 select *
   from pr_ot_det
  where ot_nuot_tipoot_codigo = 'PR'
-   and ot_numero = 467393;
+   and ot_numero = 469625;
 
 select * from induccion;
 
@@ -49,3 +49,4 @@ select *
    and numero = 22042;
 
 select dsc_estado, id_estado from estado_cambio_ot;
+

@@ -31,6 +31,7 @@ create or replace package body solicitacambio as
         from solicita_cambio_ot m
              join solicita_cambio_ot_det d on m.id_solicitud = d.id_solicitud
        where m.id_solicitud = p_solicitud_id
+         and d.nuevo = 0
       )
     loop
       l_det := api_pr_ot_det.onerow(r.ot_nro, r.ot_ser, r.ot_tpo, r.cod_art_old);
@@ -55,6 +56,32 @@ create or replace package body solicitacambio as
     end loop;
   end;
 
+  procedure insert_detail(
+    p_solicitud_id solicita_cambio_ot.id_solicitud%type
+  ) is
+    l_art articul%rowtype;
+    l_ot  pr_ot%rowtype;
+  begin
+    for r in (
+      select m.id_solicitud, m.ot_tpo, m.ot_ser, m.ot_nro, m.cant_programada_old
+           , d.cod_art_old, d.rendimiento_old
+        from solicita_cambio_ot m
+             join solicita_cambio_ot_det d on m.id_solicitud = d.id_solicitud
+       where m.id_solicitud = p_solicitud_id
+         and d.nuevo = 1
+      )
+    loop
+      l_art := api_articul.onerow(r.cod_art_old);
+      l_ot := api_pr_ot.onerow(r.ot_nro, r.ot_ser, r.ot_tpo);
+
+      insert into pr_ot_det
+      values ( r.cant_programada_old * r.rendimiento_old, 0, 0, 0, '03'
+             , r.ot_nro, r.ot_ser, r.ot_tpo, r.cod_art_old
+             , 0, r.rendimiento_old, l_art.cod_lin, 0, 'N', 1, null
+             , l_ot.fecha, 0, 0);
+    end loop;
+  end;
+
   procedure change_status(
     p_solicitud_id solicita_cambio_ot.id_solicitud%type
   ) is
@@ -70,6 +97,7 @@ create or replace package body solicitacambio as
   begin
     update_master(p_solicitud_id);
     update_detail(p_solicitud_id);
+    insert_detail(p_solicitud_id);
     change_status(p_solicitud_id);
   end;
 
