@@ -17,6 +17,10 @@ create or replace package body solicitacambio as
       g_ot.cant_resul := l_sol.cant_habilitado_new;
     end if;
 
+    if l_sol.cant_ingresado_new is not null then
+      g_ot.cant_ingresado := l_sol.cant_ingresado_new;
+    end if;
+
     api_pr_ot.upd(g_ot);
   end;
 
