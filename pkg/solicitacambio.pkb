@@ -1,4 +1,5 @@
 create or replace package body solicitacambio as
+  subtype string_t is varchar2(32767);
   g_ot pr_ot%rowtype;
 
   procedure update_master(
@@ -131,4 +132,36 @@ create or replace package body solicitacambio as
 
     return l_activos > 0;
   end;
+
+  procedure envia_correo(
+    p_solicitud_id solicita_cambio_ot.id_solicitud%type
+  ) is
+    l_html      clob;
+    l_vars      teplsql.t_assoc_array;
+    l_correos   string_t;
+    l_solicitud solicita_cambio_ot%rowtype;
+  begin
+    l_html := solicitacambio_tmpl.cambio_estado();
+
+    l_solicitud := api_solicita_cambio_ot.onerow(p_solicitud_id);
+    l_vars('id') := l_solicitud.id_solicitud;
+    l_vars('ot_nro') := l_solicitud.ot_nro;
+    l_vars('formula') :=
+        api_pr_ot.onerow(l_solicitud.ot_nro, l_solicitud.ot_ser, l_solicitud.ot_tpo).formu_art_cod_art;
+    l_vars('estado') := api_estado_cambio_ot.onerow(l_solicitud.id_estado).dsc_estado;
+    l_vars('usuario') := user;
+
+    l_html := teplsql.render(l_vars, l_html);
+
+--     l_correos := c_sistemas || '; asonteuoasu@pevisa.com.pe';
+    l_correos := 'cnavarro@pevisa.com.pe';
+
+    mail.send_html(
+        p_to => l_correos,
+--         p_bcc => c_sistemas,
+        p_from => 'avisos_produccion@pevisa.com.pe',
+        p_subject => 'SOLICITA CAMBIO OT',
+        p_html_msg => l_html
+      );
+  end ;
 end solicitacambio;

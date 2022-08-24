@@ -55,3 +55,5 @@ select *
   from solicita_cambio_ot
  where ot_nro = 471957
    and id_estado < api_estado_cambio_ot.estado_aprobado();
+
+call solicitacambio.envia_correo(216);

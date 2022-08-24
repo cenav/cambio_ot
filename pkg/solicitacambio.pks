@@ -12,4 +12,8 @@ create or replace package solicitacambio as
   , p_ser solicita_cambio_ot.ot_ser%type
   , p_nro solicita_cambio_ot.ot_nro%type
   ) return boolean;
+
+  procedure envia_correo(
+    p_solicitud_id solicita_cambio_ot.id_solicitud%type
+  );
 end solicitacambio;
