@@ -10,9 +10,10 @@ select *
   from solicita_cambio_ot
  order by id_solicitud desc;
 
+
 select *
   from solicita_cambio_ot_det
- where id_solicitud = 10;
+ where id_solicitud = 73;
 
 select * from solicita_emision;
 
@@ -50,3 +51,7 @@ select *
 
 select dsc_estado, id_estado from estado_cambio_ot;
 
+select *
+  from solicita_cambio_ot
+ where ot_nro = 471957
+   and id_estado < api_estado_cambio_ot.estado_aprobado();

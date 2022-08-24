@@ -113,4 +113,22 @@ create or replace package body solicitacambio as
        set id_estado = api_estado_cambio_ot.estado_rechazado()
      where id_solicitud = p_solicitud_id;
   end;
+
+  function tiene_solicitud_activa(
+    p_tpo solicita_cambio_ot.ot_tpo%type
+  , p_ser solicita_cambio_ot.ot_ser%type
+  , p_nro solicita_cambio_ot.ot_nro%type
+  ) return boolean is
+    l_activos pls_integer;
+  begin
+    select count(*)
+      into l_activos
+      from solicita_cambio_ot
+     where ot_tpo = p_tpo
+       and ot_ser = p_ser
+       and ot_nro = p_nro
+       and id_estado < api_estado_cambio_ot.estado_aprobado();
+
+    return l_activos > 0;
+  end;
 end solicitacambio;
