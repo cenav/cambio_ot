@@ -136,10 +136,12 @@ create or replace package body solicitacambio as
   procedure envia_correo(
     p_solicitud_id solicita_cambio_ot.id_solicitud%type
   ) is
-    l_html      clob;
-    l_vars      teplsql.t_assoc_array;
-    l_correos   string_t;
-    l_solicitud solicita_cambio_ot%rowtype;
+    c_sistemas constant string_t := 'cnavarro@pevisa.com.pe';
+    l_html              clob;
+    l_vars              teplsql.t_assoc_array;
+    l_solicitud         solicita_cambio_ot%rowtype;
+    l_correos           string_t;
+    l_solicita          string_t;
   begin
     l_html := solicitacambio_tmpl.cambio_estado();
 
@@ -152,13 +154,12 @@ create or replace package body solicitacambio as
     l_vars('usuario') := user;
 
     l_html := teplsql.render(l_vars, l_html);
-
---     l_correos := c_sistemas || '; asonteuoasu@pevisa.com.pe';
-    l_correos := 'cnavarro@pevisa.com.pe';
+    l_solicita := case user when 'PEVISA' then c_sistemas else api_usuarios.onerow(user).email end;
+    l_correos := 'jcabezas@pevisa.com.pe; ' || l_solicita;
 
     mail.send_html(
         p_to => l_correos,
---         p_bcc => c_sistemas,
+        p_bcc => c_sistemas,
         p_from => 'avisos_produccion@pevisa.com.pe',
         p_subject => 'SOLICITA CAMBIO OT',
         p_html_msg => l_html

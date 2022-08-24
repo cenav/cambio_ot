@@ -57,3 +57,11 @@ select *
    and id_estado < api_estado_cambio_ot.estado_aprobado();
 
 call solicitacambio.envia_correo(216);
+
+select *
+  from pevisa.usuario_modulo
+ where modulo = 'CAMBIO_OT';
+
+select *
+  from usuarios
+ where usuario = 'KCASTILLO';
