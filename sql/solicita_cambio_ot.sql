@@ -64,4 +64,6 @@ select *
 
 select *
   from usuarios
- where usuario = 'KCASTILLO';
+ where usuario = 'PEVISA';
+
+select * from pevisa.solicita_cambio_ot;

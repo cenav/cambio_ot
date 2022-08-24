@@ -154,7 +154,10 @@ create or replace package body solicitacambio as
     l_vars('usuario') := user;
 
     l_html := teplsql.render(l_vars, l_html);
-    l_solicita := case user when 'PEVISA' then c_sistemas else api_usuarios.onerow(user).email end;
+    l_solicita := case user
+                    when 'PEVISA' then c_sistemas
+                    else api_usuarios.onerow(l_solicitud.usuario).email
+                  end;
     l_correos := 'jcabezas@pevisa.com.pe; ' || l_solicita;
 
     mail.send_html(
