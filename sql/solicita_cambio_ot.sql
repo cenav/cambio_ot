@@ -67,3 +67,26 @@ select *
  where usuario = 'PEVISA';
 
 select * from pevisa.solicita_cambio_ot;
+
+select *
+  from pevisa.solicita_cambio_ot
+ where id_solicitud = 218;
+
+select *
+  from pevisa.solicita_cambio_ot
+ where ot_nro = 476974;
+
+
+select *
+  from pevisa.solicita_cambio_ot_det
+ where id_solicitud = 218
+   and cod_art_old = 'TACO 2”';
+
+select *
+  from pevisa.pr_ot_det
+ where ot_nuot_tipoot_codigo = 'PR'
+   and ot_numero = 464972;
+
+begin
+  api_pr_ot_det.del(464972, 8, 'PR', 'TACO 2"');
+end;

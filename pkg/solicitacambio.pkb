@@ -12,6 +12,12 @@ create or replace package body solicitacambio as
 
     if l_sol.cant_programada_new is not null then
       g_ot.cant_prog := l_sol.cant_programada_new;
+
+      update pr_ot_det
+         set cant_formula = l_sol.cant_programada_new * rendimiento
+       where ot_nuot_tipoot_codigo = l_sol.ot_tpo
+         and ot_nuot_serie = l_sol.ot_ser
+         and ot_numero = l_sol.ot_nro;
     end if;
 
     if l_sol.cant_habilitado_new is not null then
